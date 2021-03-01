@@ -1,0 +1,37 @@
+topic:
+  name: users
+  partitions-num: 3
+  replication-factor: 1
+server:
+  port: 9080
+spring:
+  kafka:
+    properties:
+      bootstrap.servers: localhost:9092
+      schema.registry.url: http://localhost:8081       
+#      bootstrap.servers: bootstrap.servers=pkc-ep9mm.us-east-2.aws.confluent.cloud:9092
+#      schema.registry.url: http://localhost:8081
+#      ssl.endpoint.identification.algorithm: https
+#      security.protocol: SASL_SSL
+#      sasl.mechanism: PLAIN
+#      sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule 
+#      username: "L5NQMNBSDJMUMKHB" 
+#      password: "mhBKDlgbYKLbQdvgysN6+RMac3Z4HgAAeOyzf3MvsfchMzycSdqYCwC6gBBbZX3y"
+    consumer:
+      group-id: my-microservice
+      auto-offset-reset: latest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      properties:
+        specific.avro.reader: true
+        interceptor.classes: io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      properties:
+        interceptor.classes: io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor
+    template:
+      default-topic:
+logging:
+  level:
+    root: info
